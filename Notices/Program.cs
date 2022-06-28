@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Notices.Core.Services;
 using Notices.Infrastructure.Context;
+using Notices.Infrastructure.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,9 @@ builder.Services.AddDbContext<MainContext>(options =>
         sqlOptions => sqlOptions.MigrationsAssembly("Notices.Infrastructure")
     )
 );
+
+builder.Services.AddScoped<INoticeRepository, NoticeRepository>();
+builder.Services.AddScoped<INoticeService, NoticeService>();
 
 var app = builder.Build();
 

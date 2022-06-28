@@ -16,11 +16,12 @@ public class NoticeBasicInformationResponseDto
     public string? ApartmentNumber { get; set; }
     public string BuildingNumber { get; set; }
     public string ZipCode { get; set; }
+    public string City { get; set; }
 
     public NoticeBasicInformationResponseDto(decimal salary, string description, int typesOfTileSize,
         int tileSize, int squareMeters, bool isWalkIn, bool isLinearDrain, bool isMixerForConcealedInstallation,
         bool isBidet, bool isFlushMountedFrameWc, string street, string apartmentNumber, string buildingNumber,
-        string zipCode)
+        string zipCode, string city)
     {
         Salary = salary;
         Description = description;
@@ -36,5 +37,6 @@ public class NoticeBasicInformationResponseDto
         ApartmentNumber = apartmentNumber;
         BuildingNumber = buildingNumber;
         ZipCode = zipCode;
+        City = city;
     }
 }
