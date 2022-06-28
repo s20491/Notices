@@ -1,6 +1,6 @@
 namespace Notices.Infrastructure.Entities;
 
-public class Recipient
+public class Recipient : BaseEntity
 {
     public List<Notice> Notices { get; set; }
 
