@@ -1,31 +1,74 @@
+using Microsoft.EntityFrameworkCore;
+using Notices.Infrastructure.Context;
 using Notices.Infrastructure.Entities;
+using Notices.Infrastructure.Exceptions;
 
 namespace Notices.Infrastructure.Repository;
 
 public class AccountRepository : IAccountRepository
 {
-    public Task<IEnumerable<Account>> GetAll()
+    private readonly MainContext _mainContext;
+
+    public AccountRepository(MainContext mainContext)
     {
-        throw new NotImplementedException();
+        _mainContext = mainContext;
     }
 
-    public Task<Account> GetById(int id)
+    public async Task<IEnumerable<Account>> GetAll()
     {
-        throw new NotImplementedException();
+        var accounts = await _mainContext.Accounts.ToListAsync();
+        return accounts;
     }
 
-    public Task Add(Account entity)
+    public async Task<Account> GetById(int id)
     {
-        throw new NotImplementedException();
+        var account = await _mainContext.Accounts.SingleOrDefaultAsync(x => x.Id == id);
+        if (account != null)
+        {
+            return account;
+        }else
+        {
+            throw new EntityNotFoundException();
+        }
     }
 
-    public Task Update(Account entity)
+    public async Task Add(Account entity)
     {
-        throw new NotImplementedException();
+        entity.DateOfCreation = DateTime.UtcNow;
+        await _mainContext.AddAsync(entity);
+        await _mainContext.SaveChangesAsync();
     }
 
-    public Task DeleteById(int id)
+    public async Task Update(Account entity)
     {
-        throw new NotImplementedException();
+        var accountToUpdate = await _mainContext.Accounts.SingleOrDefaultAsync(x => x.Id == entity.Id);
+
+        if (accountToUpdate == null)
+        {
+            throw new EntityNotFoundException();
+        }
+
+        accountToUpdate.FirstName = entity.FirstName;
+        accountToUpdate.LastName = entity.LastName;
+        accountToUpdate.Email = entity.Email;
+        accountToUpdate.PhoneNumber = entity.PhoneNumber;
+        accountToUpdate.IsAccountActive = entity.IsAccountActive;
+        accountToUpdate.DateOfUpdate = DateTime.UtcNow;
+
+        await _mainContext.SaveChangesAsync();
+    }
+
+    public async Task DeleteById(int id)
+    {
+        var accountToDelete = await _mainContext.Accounts.SingleOrDefaultAsync(x => x.Id == id);
+        if (accountToDelete != null)
+        {
+            _mainContext.Accounts.Remove(accountToDelete);
+            await _mainContext.SaveChangesAsync();
+        }
+        else
+        {
+            throw new EntityNotFoundException();
+        }
     }
 }
