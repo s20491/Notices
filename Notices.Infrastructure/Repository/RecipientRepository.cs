@@ -52,7 +52,6 @@ public class RecipientRepository : IRecipientRepository
         {
             throw new EntityNotFoundException();
         }
-
         landlordToUpdate.Account = entity.Account;
         landlordToUpdate.Notices = entity.Notices;
         landlordToUpdate.DateOfUpdate = DateTime.UtcNow;
