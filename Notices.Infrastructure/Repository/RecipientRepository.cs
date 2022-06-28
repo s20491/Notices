@@ -1,31 +1,76 @@
+using Microsoft.EntityFrameworkCore;
+using Notices.Infrastructure.Context;
 using Notices.Infrastructure.Entities;
+using Notices.Infrastructure.Exceptions;
 
 namespace Notices.Infrastructure.Repository;
 
 public class RecipientRepository : IRecipientRepository
 {
-    public Task<IEnumerable<Recipient>> GetAll()
+    private readonly MainContext _mainContext;
+    
+    public RecipientRepository(MainContext mainContext)
     {
-        throw new NotImplementedException();
+        _mainContext = mainContext;
+    }
+    public async Task<IEnumerable<Recipient>> GetAll()
+    {
+        var recipients = await _mainContext.Recipient.ToListAsync();
+
+        foreach (var recipient in recipients)
+        {
+            await _mainContext.Entry(recipient).Reference(x => x.Notices).LoadAsync();
+        }
+
+        return recipients;
     }
 
-    public Task<Recipient> GetById(int id)
+    public async Task<Recipient> GetById(int id)
     {
-        throw new NotImplementedException();
+        var recipient = await _mainContext.Recipient.SingleOrDefaultAsync(x => x.Id == id);
+        if (recipient != null)
+        {
+            await _mainContext.Entry(recipient).Reference(x => x.Notices).LoadAsync();
+            await _mainContext.Entry(recipient).Collection(x => x.Notices).LoadAsync();
+            return recipient;
+        }
+        throw new EntityNotFoundException();
     }
 
-    public Task Add(Recipient entity)
+    public async Task Add(Recipient entity)
     {
-        throw new NotImplementedException();
+        entity.DateOfCreation = DateTime.UtcNow;
+        await _mainContext.AddAsync(entity);
+        await _mainContext.SaveChangesAsync();
     }
 
-    public Task Update(Recipient entity)
+    public async Task Update(Recipient entity)
     {
-        throw new NotImplementedException();
+        var landlordToUpdate = await _mainContext.Recipient.SingleOrDefaultAsync(x => x.Id == entity.Id);
+
+        if (landlordToUpdate == null)
+        {
+            throw new EntityNotFoundException();
+        }
+
+        landlordToUpdate.Account = entity.Account;
+        landlordToUpdate.Notices = entity.Notices;
+        landlordToUpdate.DateOfUpdate = DateTime.UtcNow;
+
+        await _mainContext.SaveChangesAsync();
     }
 
-    public Task DeleteById(int id)
+    public async Task DeleteById(int id)
     {
-        throw new NotImplementedException();
+        var recipientToDelete = await _mainContext.Recipient.SingleOrDefaultAsync(x => x.Id == id);
+        if (recipientToDelete != null)
+        {
+            _mainContext.Recipient.Remove(recipientToDelete);
+            await _mainContext.SaveChangesAsync();
+        }
+        else
+        {
+            throw new EntityNotFoundException();
+        }
     }
 }
