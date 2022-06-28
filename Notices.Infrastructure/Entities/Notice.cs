@@ -4,6 +4,7 @@ public class Notice : BaseEntity
 {
     public decimal Salary { get; set; }
     public string Description { get; set; }
+    public int TypesOfTileSize { get; set; }
     public int TileSize { get; set; }
     public int SquareMeters { get; set; }
     public bool IsWalkIn { get; set; }

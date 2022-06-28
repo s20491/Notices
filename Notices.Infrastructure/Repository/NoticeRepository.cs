@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Notices.Infrastructure.Context;
 using Notices.Infrastructure.Entities;
+using Notices.Infrastructure.Exceptions;
 
 namespace Notices.Infrastructure.Repository;
 
@@ -25,23 +26,67 @@ public class NoticeRepository : INoticeRepository
         return notices;
     }
 
-    public Task<Notice> GetById(int id)
+    public async Task<Notice> GetById(int id)
     {
-        throw new NotImplementedException();
+        var notice = await _mainContext.Notice.SingleOrDefaultAsync(x => x.Id == id);
+        if (notice != null)
+        {
+            await _mainContext.Entry(notice).Reference(x => x.Address).LoadAsync();
+            return notice;
+        }else {
+            throw new EntityNotFoundException();
+        }
     }
 
-    public Task Add(Notice entity)
+    public async Task Add(Notice entity)
     {
-        throw new NotImplementedException();
+        var notice = await _mainContext.Notice.SingleOrDefaultAsync(x => x.Address == entity.Address);
+        if (notice != null)
+        {
+            throw new EntityAlreadyExistException();
+        }
+        
+        entity.DateOfCreation = DateTime.UtcNow;
+        await _mainContext.AddAsync(entity);
+        await _mainContext.SaveChangesAsync();
     }
 
-    public Task Update(Notice entity)
+    public async Task Update(Notice entity)
     {
-        throw new NotImplementedException();
+        var noticeToUpdate = await _mainContext.Notice.SingleOrDefaultAsync(x => x.Id == entity.Id);
+
+        if (noticeToUpdate == null)
+        {
+            throw new EntityNotFoundException();
+        }
+
+        noticeToUpdate.Salary = entity.Salary;
+        noticeToUpdate.Description = entity.Description;
+        noticeToUpdate.TypesOfTileSize = entity.TypesOfTileSize;
+        noticeToUpdate.TileSize = entity.TileSize;
+        noticeToUpdate.SquareMeters = entity.SquareMeters;
+        noticeToUpdate.IsWalkIn = entity.IsWalkIn;
+        noticeToUpdate.IsWalkIn = entity.IsWalkIn;
+        noticeToUpdate.IsLinearDrain = entity.IsLinearDrain;
+        noticeToUpdate.IsMixerForConcealedInstallation = entity.IsMixerForConcealedInstallation;
+        noticeToUpdate.IsBidet = entity.IsBidet;
+        noticeToUpdate.IsFlushMountedFrameWc = entity.IsFlushMountedFrameWc;
+        noticeToUpdate.DateOfUpdate = DateTime.UtcNow;
+
+        await _mainContext.SaveChangesAsync();
     }
 
-    public Task DeleteById(int id)
+    public async Task DeleteById(int id)
     {
-        throw new NotImplementedException();
+        var noticeToDelete = await _mainContext.Notice.SingleOrDefaultAsync(x => x.Id == id);
+        if (noticeToDelete != null)
+        {
+            _mainContext.Notice.Remove(noticeToDelete);
+            await _mainContext.SaveChangesAsync();
+        }
+        else
+        {
+            throw new EntityNotFoundException();
+        }
     }
 }
