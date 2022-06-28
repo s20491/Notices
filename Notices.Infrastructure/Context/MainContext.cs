@@ -25,4 +25,17 @@ public class MainContext : DbContext
         optionsBuilder.UseSqlite("DataSource=dbo.Notices.db");
     }
     
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Notice>()
+            .HasMany(x => x.Images)
+            .WithOne(x => x.Notice)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Recipient>()
+            .HasMany(x => x.Notices)
+            .WithOne(x => x.Recipient)
+            .OnDelete(DeleteBehavior.Cascade);
+    }
+    
 }
