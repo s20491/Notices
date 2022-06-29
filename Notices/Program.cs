@@ -19,6 +19,13 @@ builder.Services.AddDbContext<MainContext>(options =>
 
 builder.Services.AddScoped<INoticeRepository, NoticeRepository>();
 builder.Services.AddScoped<INoticeService, NoticeService>();
+builder.Services.AddScoped<IAddressRepository, AddressRepository>();
+builder.Services.AddScoped<IAddressService, AddressService>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<IImageRepository, ImageRepository>();
+builder.Services.AddScoped<IProviderRepository, ProviderRepository>();
+builder.Services.AddScoped<IRecipientRepository, RecipientRepository>();
+builder.Services.AddScoped<IRecipientService, RecipientService>();
 
 var app = builder.Build();
 
