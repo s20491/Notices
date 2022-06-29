@@ -73,4 +73,22 @@ public class AddressRepository : IAddressRepository
             throw new EntityNotFoundException();
         }
     }
+    public async Task<int> GetAddressIdByItsAttributesAsync(string country, string city, string zipCode, string street, string buildingNumber,
+        string apartmentNumber)
+    {
+        var address = await _mainContext.Address.FirstOrDefaultAsync(x =>
+            x.Country == country && x.City == city && x.ZipCode == zipCode && x.Street == street
+            && x.BuildingNumber == buildingNumber && x.ApartmentNumber == apartmentNumber);
+        return address?.Id ?? 0;
+    }
+
+    public async Task<Address> CreateAndGetAsync(Address address)
+    {
+        address.DateOfCreation = DateTime.UtcNow;
+        address.DateOfUpdate = DateTime.UtcNow;
+        await _mainContext.AddAsync(address);
+        await _mainContext.SaveChangesAsync();
+
+        return address;
+    }
 }
