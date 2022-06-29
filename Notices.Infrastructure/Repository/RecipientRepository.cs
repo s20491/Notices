@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Notices.Infrastructure.Context;
 using Notices.Infrastructure.Entities;
 using Notices.Infrastructure.Exceptions;
@@ -8,10 +9,11 @@ namespace Notices.Infrastructure.Repository;
 public class RecipientRepository : IRecipientRepository
 {
     private readonly MainContext _mainContext;
-    
-    public RecipientRepository(MainContext mainContext)
+    private readonly ILogger<RecipientRepository> _logger;
+    public RecipientRepository(MainContext mainContext, ILogger<RecipientRepository> logger)
     {
         _mainContext = mainContext;
+        _logger = logger;
     }
     public async Task<IEnumerable<Recipient>> GetAll()
     {
@@ -34,6 +36,7 @@ public class RecipientRepository : IRecipientRepository
             await _mainContext.Entry(recipient).Collection(x => x.Notices).LoadAsync();
             return recipient;
         }
+        _logger.LogError("Cannot find landlord with provided id: {RecipientId}",id);
         throw new EntityNotFoundException();
     }
 

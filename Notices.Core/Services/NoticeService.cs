@@ -1,4 +1,5 @@
 using Notices.Core.DTO;
+using Notices.Infrastructure.Entities;
 using Notices.Infrastructure.Repository;
 
 namespace Notices.Core.Services;
@@ -40,14 +41,55 @@ public class NoticeService : INoticeService
             x.Address.City
         ));
     }
-
-    public Task AddNewNoticeToExistingRecipientAsync(NoticeBasicInformationResponseDto dto)
+    
+    public async Task AddNewNoticeToExistingRecipientAsync(NoticeCreationRequestDto dto)
     {
-        throw new NotImplementedException();
+        var recipient = await _recipientRepository.GetById(dto.RecipientId);
+
+        var addressId = await _addressService.GetAddressIdOrCreateAsync(dto.City,
+            dto.City, dto.ZipCode, dto.Street, dto.BuildingNumber, dto.ApartmentNumber);
+
+        await _noticeRepository.Add(new Notice
+        {
+            AddressId = addressId,
+            RecipientId = recipient.Id,
+            Salary = dto.Salary,
+            Description = dto.Description,
+            TypesOfTileSize = dto.TypesOfTileSize,
+            TileSize = dto.TileSize,
+            SquareMeters = dto.SquareMeters,
+            IsWalkIn = dto.IsWalkIn,
+            IsLinearDrain = dto.IsLinearDrain,
+            IsMixerForConcealedInstallation = dto.IsMixerForConcealedInstallation,
+            IsBidet = dto.IsBidet,
+            IsFlushMountedFrameWc = dto.IsFlushMountedFrameWc,
+        });
     }
 
-    public Task<NoticeBasicInformationResponseDto> GetMostExpensiveNoticeAsync()
+    public async Task<NoticeBasicInformationResponseDto> GetMostExpensiveNoticeAsync()
     {
-        throw new NotImplementedException();
+        var notices = await _noticeRepository.GetAll();
+
+        var mostExpensive = notices.MaxBy(x => x.Salary);
+
+        if (mostExpensive is null) return null;
+
+        return new NoticeBasicInformationResponseDto(
+            mostExpensive.Salary,
+            mostExpensive.Description,
+            mostExpensive.TypesOfTileSize,
+            mostExpensive.TileSize,
+            mostExpensive.SquareMeters,
+            mostExpensive.IsWalkIn,
+            mostExpensive.IsLinearDrain,
+            mostExpensive.IsMixerForConcealedInstallation,
+            mostExpensive.IsBidet,
+            mostExpensive.IsFlushMountedFrameWc,
+            mostExpensive.Address.Street,
+            mostExpensive.Address.ApartmentNumber,
+            mostExpensive.Address.BuildingNumber,
+            mostExpensive.Address.ZipCode,
+            mostExpensive.Address.City
+        );
     }
 }

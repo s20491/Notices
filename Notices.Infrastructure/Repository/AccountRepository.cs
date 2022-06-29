@@ -71,4 +71,14 @@ public class AccountRepository : IAccountRepository
             throw new EntityNotFoundException();
         }
     }
+
+    public async Task<Account> CreateAndGet(Account account)
+    {
+        account.DateOfCreation = DateTime.UtcNow;
+        account.DateOfUpdate = DateTime.UtcNow;
+        await _mainContext.AddAsync(account);
+        await _mainContext.SaveChangesAsync();
+
+        return account;
+    }
 }
