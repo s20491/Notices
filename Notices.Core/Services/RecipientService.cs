@@ -8,6 +8,7 @@ public class RecipientService : IRecipientService
 {
     private readonly IRecipientRepository _recipientRepository;
     private readonly IAccountRepository _accountRepository;
+    
 
     public RecipientService(IRecipientRepository recipientRepository,
         IAccountRepository accountRepository)
@@ -32,5 +33,21 @@ public class RecipientService : IRecipientService
         {
             AccountId = account.Id
         });
+    }
+
+    public async  Task UpdateExistingRecipient(int id, RecipientCreationRequestDto dto)
+    {
+        var recipient = await _recipientRepository.GetById(id);
+
+        await _recipientRepository.Update(new Recipient
+        {
+            Id = recipient.Id,
+            AccountId = recipient.AccountId,
+        });
+    }
+
+    public async Task DeleteRecipient(int id)
+    {
+        await _recipientRepository.DeleteById(id);
     }
 }
