@@ -92,4 +92,30 @@ public class NoticeService : INoticeService
             mostExpensive.Address.City
         );
     }
+    public async Task UpdateExistingNotice(int id, NoticeBasicInformationResponseDto dto)
+    {
+        var notice = await _noticeRepository.GetById(id);
+
+        await _noticeRepository.Update(new Notice
+        {
+            Id = notice.Id,
+            AddressId = notice.AddressId,
+            Salary = dto.Salary,
+            Description = dto.Description,
+            TypesOfTileSize = dto.TypesOfTileSize,
+            TileSize =dto.TileSize,
+            SquareMeters = dto.SquareMeters,
+            IsWalkIn =dto.IsWalkIn,
+            IsLinearDrain = dto.IsLinearDrain,
+            IsMixerForConcealedInstallation = dto.IsMixerForConcealedInstallation,
+            IsBidet = dto.IsBidet,
+            IsFlushMountedFrameWc = dto.IsFlushMountedFrameWc
+        });
+    }
+    public async Task DeleteNotice(int id)
+    {
+        await _noticeRepository.DeleteById(id);
+    }
+
+    
 }

@@ -9,4 +9,8 @@ public interface INoticeService
     Task AddNewNoticeToExistingRecipientAsync(NoticeCreationRequestDto dto);
 
     Task<NoticeBasicInformationResponseDto> GetMostExpensiveNoticeAsync();
+    
+    Task UpdateExistingNotice(int id, NoticeBasicInformationResponseDto dto);
+    Task DeleteNotice(int id);
+    
 }

@@ -44,4 +44,34 @@ public class NoticeController : ControllerBase
 
         return Ok(notice);
     }
+    
+    
+    [HttpPut("Update/{id}")]
+    public async Task<IActionResult> UpdateNotice([FromBody] NoticeBasicInformationResponseDto dto, int id)
+    {
+        try
+        {
+            await _noticeService.UpdateExistingNotice(id,dto);
+        }
+        catch (EntityNotFoundException)
+        {
+            return NotFound();
+        }
+
+        return Ok();
+    }
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteNotice(int id)
+    {
+        try
+        {
+            await _noticeService.DeleteNotice(id);
+        }
+        catch (EntityNotFoundException)
+        {
+            return NotFound();
+        }
+
+        return Ok();
+    }
 }
