@@ -15,9 +15,24 @@ public class NoticeController : ControllerBase
     {
         _noticeService = noticeService;
     }
-
+    
     [HttpPost("Create")]
     public async Task<IActionResult> CreateNewNotice([FromBody] NoticeCreationRequestDto dto)
+    {
+        try
+        {
+            await _noticeService.CreateNewNotice(dto);
+        }
+        catch (EntityNotFoundException)
+        {
+            return BadRequest();
+        }
+
+        return NoContent();
+    }
+
+    [HttpPost("AddToRecipient")]
+    public async Task<IActionResult> AddNoticeToRecipient([FromBody] NoticeCreationRequestDto dto)
     {
         try
         {

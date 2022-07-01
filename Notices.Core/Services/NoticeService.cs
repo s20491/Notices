@@ -16,6 +16,7 @@ public class NoticeService : INoticeService
     {
         _noticeRepository = noticeRepository;
         _recipientRepository = recipientRepository;
+        _recipientRepository = recipientRepository;
         _addressService = addressService;
     }
     
@@ -41,7 +42,28 @@ public class NoticeService : INoticeService
             x.Address.City
         ));
     }
-    
+
+    public async Task CreateNewNotice(NoticeCreationRequestDto dto)
+    {
+        var addressId = await _addressService.GetAddressIdOrCreateAsync(dto.City,
+            dto.City, dto.ZipCode, dto.Street, dto.BuildingNumber, dto.ApartmentNumber);
+
+        await _noticeRepository.Add(new Notice
+        {
+            AddressId = addressId,
+            Salary = dto.Salary,
+            Description = dto.Description,
+            TypesOfTileSize = dto.TypesOfTileSize,
+            TileSize = dto.TileSize,
+            SquareMeters = dto.SquareMeters,
+            IsWalkIn = dto.IsWalkIn,
+            IsLinearDrain = dto.IsLinearDrain,
+            IsMixerForConcealedInstallation = dto.IsMixerForConcealedInstallation,
+            IsBidet = dto.IsBidet,
+            IsFlushMountedFrameWc = dto.IsFlushMountedFrameWc,
+        });
+    }
+
     public async Task AddNewNoticeToExistingRecipientAsync(NoticeCreationRequestDto dto)
     {
         var recipient = await _recipientRepository.GetById(dto.RecipientId);
