@@ -11,9 +11,10 @@ public class ProviderService : IProviderService
     
     
     
-    public ProviderService(IProviderRepository providerRepository)
+    public ProviderService(IProviderRepository providerRepository, IAccountRepository accountRepository)
     {
         _providerRepository = providerRepository;
+        _accountRepository = accountRepository;
     }
 
 
@@ -30,6 +31,7 @@ public class ProviderService : IProviderService
 
         await _providerRepository.Add(new Provider
         {
+            Notice = null,
             AccountId = account.Id
         });
     }

@@ -92,7 +92,7 @@ public class NoticeRepository : INoticeRepository
 
     public async Task AssignRecipientToNotice(int noticeId, int recipientId)
     {
-        var notice = await GetById(noticeId);
+        var notice = await _mainContext.Notice.SingleOrDefaultAsync(x => x.Id == noticeId);
 
         if (notice == null)
         {

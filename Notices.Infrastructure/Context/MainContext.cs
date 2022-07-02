@@ -36,6 +36,11 @@ public class MainContext : DbContext
             .HasMany(x => x.Notices)
             .WithOne(x => x.Recipient)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        modelBuilder.Entity<Provider>()
+            .HasOne(x => x.Notice)
+            .WithOne(x => x.Provider)
+            .OnDelete(DeleteBehavior.Cascade);
     }
     
 }
