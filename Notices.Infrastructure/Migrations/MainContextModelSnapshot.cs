@@ -171,6 +171,9 @@ namespace Notices.Infrastructure.Migrations
                     b.Property<int>("TileSize")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("TypesOfTileSize")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AddressId");

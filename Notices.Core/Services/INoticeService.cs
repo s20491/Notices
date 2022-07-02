@@ -7,7 +7,7 @@ public interface INoticeService
     Task<IEnumerable<NoticeBasicInformationResponseDto>> GetAllNoticesBasicInfoAsync();
 
     Task CreateNewNotice(NoticeCreationRequestDto dto);
-    Task AddNewNoticeToExistingRecipientAsync(NoticeCreationRequestDto dto);
+    Task AddNewNoticeToExistingRecipientAsync(AddNoticeToRecipient dto);
 
     Task<NoticeBasicInformationResponseDto> GetMostExpensiveNoticeAsync();
     

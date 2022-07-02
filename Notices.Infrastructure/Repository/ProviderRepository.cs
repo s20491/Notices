@@ -40,13 +40,6 @@ public class ProviderRepository : IProviderRepository
 
     public async Task Add(Provider entity)
     {
-        var provider = await _mainContext.Provider.SingleOrDefaultAsync(x => x.Notice == entity.Notice);
-
-        if (provider != null)
-        {
-            throw new EntityAlreadyExistException();
-        }
-
         entity.DateOfCreation = DateTime.UtcNow;
         await _mainContext.AddAsync(entity);
         await _mainContext.SaveChangesAsync();

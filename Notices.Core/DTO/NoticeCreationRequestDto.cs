@@ -17,6 +17,5 @@ public class NoticeCreationRequestDto
     public string BuildingNumber { get; set; }
     public string ZipCode { get; set; }
     public string City { get; set; }
-    public int RecipientId { get; set; }
     public int ProviderId { get; set; }
 }

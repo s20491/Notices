@@ -11,7 +11,7 @@ using Notices.Infrastructure.Context;
 namespace Notices.Infrastructure.Migrations
 {
     [DbContext(typeof(MainContext))]
-    [Migration("20220628173850_initial")]
+    [Migration("20220702083440_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -171,6 +171,9 @@ namespace Notices.Infrastructure.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("TileSize")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TypesOfTileSize")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");

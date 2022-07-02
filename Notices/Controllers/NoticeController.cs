@@ -28,11 +28,11 @@ public class NoticeController : ControllerBase
             return BadRequest();
         }
 
-        return NoContent();
+        return Ok();
     }
 
     [HttpPost("AddToRecipient")]
-    public async Task<IActionResult> AddNoticeToRecipient([FromBody] NoticeCreationRequestDto dto)
+    public async Task<IActionResult> AddNoticeToRecipient([FromBody] AddNoticeToRecipient dto)
     {
         try
         {
@@ -43,7 +43,7 @@ public class NoticeController : ControllerBase
             return BadRequest();
         }
 
-        return NoContent();
+        return Ok();
     }
 
     [HttpGet("GetAll")]
