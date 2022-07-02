@@ -37,10 +37,11 @@ public class RecipientService : IRecipientService
 
     public async  Task UpdateExistingRecipient(int id, RecipientCreationRequestDto dto)
     {
-        var recipient = await _accountRepository.GetById(id);
+        var recipient = await _recipientRepository.GetById(id);
 
         await _accountRepository.Update(new Account
         {
+            Id = recipient.AccountId,
             FirstName = dto.FirstName,
             LastName = dto.LastName,
             Email = dto.Email,

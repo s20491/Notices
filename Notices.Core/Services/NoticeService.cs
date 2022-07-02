@@ -78,7 +78,7 @@ public class NoticeService : INoticeService
             throw new EntityNotFoundException();
         }
 
-        await _noticeRepository.AssignRecipientToNotice(dto.NoticeId, recipient.Id);
+        await _noticeRepository.AssignRecipientToNotice(dto.NoticeId, dto.RecipientId);
     }
 
     public async Task<NoticeBasicInformationResponseDto> GetMostExpensiveNoticeAsync()

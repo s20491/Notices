@@ -2,8 +2,8 @@ namespace Notices.Core.DTO;
 
 public class AddNoticeToRecipient
 {
-    public int NoticeId;
-    public int RecipientId;
+    public int NoticeId { get; set; }
+    public int RecipientId { get; set; }
 
     public AddNoticeToRecipient(int noticeId, int recipientId)
     {
