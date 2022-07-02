@@ -15,7 +15,7 @@ public class NoticeServiceTests
     public async Task GetTheMostExpensiveNoticeAsync_ShouldReturnNull_WhenNoticesCollectionIsNull()
     {
         var sut = new NoticeService(Mock.Of<INoticeRepository>(), Mock.Of<IRecipientRepository>(),
-            Mock.Of<IAddressService>());
+            Mock.Of<IAddressService>(), Mock.Of<IProviderRepository>());
 
         var result = await sut.GetMostExpensiveNoticeAsync();
         result.Should().BeNull();
@@ -76,7 +76,7 @@ public class NoticeServiceTests
         noticeRepositoryMock.Setup(x => x.GetAll()).ReturnsAsync(notices);
 
         var sut = new NoticeService(noticeRepositoryMock.Object, Mock.Of<IRecipientRepository>(),
-            Mock.Of<IAddressService>());
+            Mock.Of<IAddressService>(), Mock.Of<IProviderRepository>());
 
         var result = await sut.GetMostExpensiveNoticeAsync();
         
