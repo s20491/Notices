@@ -89,4 +89,18 @@ public class NoticeRepository : INoticeRepository
             throw new EntityNotFoundException();
         }
     }
+
+    public async Task AssignRecipientToNotice(int noticeId, int recipientId)
+    {
+        var notice = await _mainContext.Notice.SingleOrDefaultAsync(x => x.Id == noticeId);
+
+        if (notice == null)
+        {
+            throw new EntityNotFoundException();
+        }
+
+        notice.RecipientId = recipientId;
+        await _mainContext.SaveChangesAsync();
+
+    }
 }

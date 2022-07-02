@@ -98,6 +98,7 @@ namespace Notices.Infrastructure.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Salary = table.Column<decimal>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: false),
+                    TypesOfTileSize = table.Column<int>(type: "INTEGER", nullable: false),
                     TileSize = table.Column<int>(type: "INTEGER", nullable: false),
                     SquareMeters = table.Column<int>(type: "INTEGER", nullable: false),
                     IsWalkIn = table.Column<bool>(type: "INTEGER", nullable: false),

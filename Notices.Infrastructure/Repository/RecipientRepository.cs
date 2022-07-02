@@ -32,11 +32,10 @@ public class RecipientRepository : IRecipientRepository
         var recipient = await _mainContext.Recipient.SingleOrDefaultAsync(x => x.Id == id);
         if (recipient != null)
         {
-            await _mainContext.Entry(recipient).Reference(x => x.Notices).LoadAsync();
             await _mainContext.Entry(recipient).Collection(x => x.Notices).LoadAsync();
             return recipient;
         }
-        _logger.LogError("Cannot find landlord with provided id: {RecipientId}",id);
+        _logger.LogError("Cannot find recipient with provided id: {RecipientId}",id);
         throw new EntityNotFoundException();
     }
 

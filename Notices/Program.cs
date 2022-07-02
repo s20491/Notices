@@ -26,6 +26,7 @@ builder.Services.AddScoped<IImageRepository, ImageRepository>();
 builder.Services.AddScoped<IProviderRepository, ProviderRepository>();
 builder.Services.AddScoped<IRecipientRepository, RecipientRepository>();
 builder.Services.AddScoped<IRecipientService, RecipientService>();
+builder.Services.AddScoped<IProviderService, ProviderService>();
 
 var app = builder.Build();
 

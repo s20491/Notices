@@ -39,10 +39,14 @@ public class RecipientService : IRecipientService
     {
         var recipient = await _recipientRepository.GetById(id);
 
-        await _recipientRepository.Update(new Recipient
+        await _accountRepository.Update(new Account
         {
-            Id = recipient.Id,
-            AccountId = recipient.AccountId,
+            Id = recipient.AccountId,
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            Email = dto.Email,
+            PhoneNumber = dto.PhoneNumber,
+            IsAccountActive = true
         });
     }
 

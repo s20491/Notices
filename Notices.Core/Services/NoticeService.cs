@@ -1,5 +1,6 @@
 using Notices.Core.DTO;
 using Notices.Infrastructure.Entities;
+using Notices.Infrastructure.Exceptions;
 using Notices.Infrastructure.Repository;
 
 namespace Notices.Core.Services;
@@ -10,14 +11,16 @@ public class NoticeService : INoticeService
     private readonly INoticeRepository _noticeRepository;
     private readonly IRecipientRepository _recipientRepository;
     private readonly IAddressService _addressService;
+    private readonly IProviderRepository _providerRepository;
     
     public NoticeService(INoticeRepository noticeRepository, IRecipientRepository recipientRepository,
-        IAddressService addressService)
+        IAddressService addressService, IProviderRepository providerRepository)
     {
         _noticeRepository = noticeRepository;
         _recipientRepository = recipientRepository;
         _recipientRepository = recipientRepository;
         _addressService = addressService;
+        _providerRepository = providerRepository;
     }
     
     public async Task<IEnumerable<NoticeBasicInformationResponseDto>> GetAllNoticesBasicInfoAsync()
@@ -45,12 +48,15 @@ public class NoticeService : INoticeService
 
     public async Task CreateNewNotice(NoticeCreationRequestDto dto)
     {
+        var provider = await _providerRepository.GetById(dto.ProviderId);
+        
         var addressId = await _addressService.GetAddressIdOrCreateAsync(dto.City,
             dto.City, dto.ZipCode, dto.Street, dto.BuildingNumber, dto.ApartmentNumber);
 
         await _noticeRepository.Add(new Notice
         {
             AddressId = addressId,
+            ProviderId = provider.Id,
             Salary = dto.Salary,
             Description = dto.Description,
             TypesOfTileSize = dto.TypesOfTileSize,
@@ -63,29 +69,16 @@ public class NoticeService : INoticeService
             IsFlushMountedFrameWc = dto.IsFlushMountedFrameWc,
         });
     }
-
-    public async Task AddNewNoticeToExistingRecipientAsync(NoticeCreationRequestDto dto)
+    
+    public async Task AddNewNoticeToExistingRecipientAsync(AddNoticeToRecipient dto)
     {
         var recipient = await _recipientRepository.GetById(dto.RecipientId);
-
-        var addressId = await _addressService.GetAddressIdOrCreateAsync(dto.City,
-            dto.City, dto.ZipCode, dto.Street, dto.BuildingNumber, dto.ApartmentNumber);
-
-        await _noticeRepository.Add(new Notice
+        if (recipient == null)
         {
-            AddressId = addressId,
-            RecipientId = recipient.Id,
-            Salary = dto.Salary,
-            Description = dto.Description,
-            TypesOfTileSize = dto.TypesOfTileSize,
-            TileSize = dto.TileSize,
-            SquareMeters = dto.SquareMeters,
-            IsWalkIn = dto.IsWalkIn,
-            IsLinearDrain = dto.IsLinearDrain,
-            IsMixerForConcealedInstallation = dto.IsMixerForConcealedInstallation,
-            IsBidet = dto.IsBidet,
-            IsFlushMountedFrameWc = dto.IsFlushMountedFrameWc,
-        });
+            throw new EntityNotFoundException();
+        }
+
+        await _noticeRepository.AssignRecipientToNotice(dto.NoticeId, dto.RecipientId);
     }
 
     public async Task<NoticeBasicInformationResponseDto> GetMostExpensiveNoticeAsync()

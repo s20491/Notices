@@ -171,6 +171,9 @@ namespace Notices.Infrastructure.Migrations
                     b.Property<int>("TileSize")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("TypesOfTileSize")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AddressId");
@@ -293,8 +296,7 @@ namespace Notices.Infrastructure.Migrations
 
             modelBuilder.Entity("Notices.Infrastructure.Entities.Provider", b =>
                 {
-                    b.Navigation("Notice")
-                        .IsRequired();
+                    b.Navigation("Notice");
                 });
 
             modelBuilder.Entity("Notices.Infrastructure.Entities.Recipient", b =>
